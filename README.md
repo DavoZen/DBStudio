@@ -1,6 +1,6 @@
 # D B Studio - Музичні аксесуари з 3D-друку
 
-🌐 **Live Demo**: [https://yourusername.github.io/db-studio](https://yourusername.github.io/db-studio)
+🌐 **Live Demo**: [https://yourusername.github.io/db-studio](https://DavoZen.github.io/DBStudio)
 
 ## 🎸 Про проект
 
