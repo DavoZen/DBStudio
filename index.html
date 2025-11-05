@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D B Studio — Музичні аксесуари з 3D-друку</title>
-    <meta name="description" content="D B Studio - створюємо унікальні музичні аксесуари за допомогою 3D-друку. Підставки для гітар, педальборди, індивідуальні замовлення.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -33,250 +33,34 @@
             color: var(--text-light);
             line-height: 1.6;
             overflow-x: hidden;
+            cursor: none;
         }
 
-        /* Мобільна навігація */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-light);
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 1002;
-        }
-
-        .mobile-nav {
+        /* Кастомний курсор */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
             position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background: var(--darker-bg);
-            z-index: 1001;
-            transition: right 0.3s ease;
-            padding: 80px 30px 30px;
-            backdrop-filter: blur(20px);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.2s ease;
         }
 
-        .mobile-nav.active {
-            right: 0;
-        }
-
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .mobile-nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 1.2rem;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            transition: color 0.3s ease;
-        }
-
-        .mobile-nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .nav-overlay {
-            display: none;
+        .cursor-follower {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            border-radius: 50%;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.1s ease;
         }
 
-        .nav-overlay.active {
-            display: block;
-        }
-
-        /* Адаптивність */
-        @media (max-width: 1200px) {
-            section {
-                padding: 80px 5%;
-            }
-            
-            .hero h1 {
-                font-size: 3.5rem;
-            }
-            
-            .section-title {
-                font-size: 2.8rem;
-            }
-        }
-
-        @media (max-width: 968px) {
-            .about-container {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            
-            .process-steps {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .cursor, .cursor-follower {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            section {
-                padding: 60px 5%;
-                min-height: auto;
-            }
-            
-            .hero {
-                padding: 120px 5% 80px;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-                line-height: 1.2;
-            }
-            
-            .hero p {
-                font-size: 1.1rem;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
-            }
-            
-            .section-title {
-                font-size: 2.2rem;
-                margin-bottom: 2rem;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 30px;
-                margin-top: 50px;
-            }
-            
-            .product-grid {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-            
-            .process-steps {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .testimonials-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            
-            /* Оптимізація для мобільних */
-            .product-card,
-            .testimonial-card,
-            .step {
-                transform: none !important;
-            }
-            
-            .cta-button {
-                padding: 15px 30px;
-                font-size: 1rem;
-                width: 100%;
-                max-width: 300px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .section-title {
-                font-size: 1.8rem;
-            }
-            
-            .about-text h2 {
-                font-size: 2rem;
-            }
-            
-            .stat-number {
-                font-size: 2.5rem;
-            }
-            
-            .product-info {
-                padding: 20px;
-            }
-            
-            .step {
-                padding: 25px 20px;
-            }
-            
-            .step-icon {
-                width: 80px;
-                height: 80px;
-                font-size: 2rem;
-            }
-        }
-
-        /* Touch-friendly оптимізація */
-        @media (hover: none) {
-            .product-card:hover,
-            .step:hover,
-            .gallery-item:hover {
-                transform: none !important;
-            }
-            
-            .cta-button:hover {
-                transform: none !important;
-            }
-            
-            .nav-links a:hover::before {
-                width: 0;
-            }
-        }
-
-        /* Покращення продуктивності для мобільних */
-        @media (max-width: 768px) {
-            .floating-shapes,
-            .animated-bg {
-                display: none;
-            }
-            
-            .product-card::before,
-            .step::before {
-                display: none;
-            }
-        }
-
-        /* Базові стилі (залишаються з попередньої версії, але скорочені для читабельності) */
+        /* Анімований фон */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -286,36 +70,86 @@
             z-index: -2;
             background: 
                 radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 136, 0.05) 0%, transparent 50%);
+            animation: bgPulse 10s ease-in-out infinite alternate;
         }
 
+        @keyframes bgPulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .shape {
+            position: absolute;
+            background: var(--gradient);
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0;
+        }
+
+        /* Навігація */
         nav {
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 20px 5%;
+            padding: 25px 10%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(10, 10, 10, 0.8);
             z-index: 1000;
             backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
+            transform: translateY(-100%);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         nav.scrolled {
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(0);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #fff;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            mix-blend-mode: overlay;
+            transition: left 0.5s ease;
+        }
+
+        .logo:hover::before {
+            left: 100%;
         }
 
         .logo-accent {
             color: var(--primary-color);
+            text-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
         }
 
         .nav-links {
@@ -327,9 +161,32 @@
             color: #ddd;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            padding: 10px 0;
         }
 
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        /* Прогрес бар */
         .scroll-progress {
             position: fixed;
             top: 0;
@@ -338,37 +195,70 @@
             height: 3px;
             background: var(--gradient);
             z-index: 1001;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
         }
 
+        /* Загальні стилі для секцій */
         section {
             padding: 100px 10%;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
 
+        .section-title {
+            font-size: 3.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(108, 99, 255, 0.3);
+        }
+
+        /* Герой секція */
         .hero {
             text-align: center;
             position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: 5rem;
             margin-bottom: 1rem;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: translateY(50px);
+            text-shadow: 0 0 50px rgba(108, 99, 255, 0.5);
+            font-weight: 800;
         }
 
         .hero p {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             max-width: 700px;
             margin: 0 auto 2rem;
             color: var(--text-gray);
+            opacity: 0;
+            transform: translateY(30px);
         }
 
         .hero-buttons {
+            opacity: 0;
+            transform: translateY(30px);
             display: flex;
             gap: 20px;
             justify-content: center;
@@ -377,156 +267,817 @@
 
         .cta-button {
             display: inline-block;
-            padding: 15px 35px;
+            padding: 18px 45px;
             background: var(--gradient);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border: none;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(108, 99, 255, 0.4);
         }
 
         .cta-secondary {
             background: transparent;
             border: 2px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
         }
 
+        .cta-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .cta-secondary:hover::before {
+            left: 0;
+        }
+
+        /* Статистика */
         .stats {
             display: flex;
             justify-content: space-around;
-            margin-top: 60px;
+            margin-top: 80px;
+            opacity: 0;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 30px;
         }
 
         .stat-item {
             text-align: center;
             flex: 1;
-            min-width: 150px;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
         }
 
         .stat-number {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            text-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+        }
+
+        /* Про нас */
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .about-text h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .about-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
+        .about-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            line-height: 1.8;
         }
 
         .about-image {
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(108, 99, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transform: translateX(50px) rotate(5deg);
+            position: relative;
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            mix-blend-mode: overlay;
+        }
+
+        .about-image:hover::before {
+            opacity: 0.3;
+        }
+
+        .about-image:hover {
+            transform: scale(1.05) rotate(0deg);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(108, 99, 255, 0.2),
+                0 0 50px rgba(108, 99, 255, 0.2);
         }
 
         .about-image img {
             width: 100%;
             height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .about-image:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Продукти */
+        .products {
+            background: var(--darker-bg);
+            position: relative;
+        }
+
+        .products::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0.02;
+            z-index: -1;
         }
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
         }
 
         .product-card {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 25px;
             overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transform: translateY(100px) rotateX(10deg) scale(0.9);
+            position: relative;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+            mix-blend-mode: overlay;
+        }
+
+        .product-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .product-card:hover {
+            transform: translateY(-20px) rotateX(0deg) scale(1.05);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(108, 99, 255, 0.2),
+                0 0 50px rgba(108, 99, 255, 0.3);
         }
 
         .product-image {
-            height: 250px;
+            height: 280px;
             overflow: hidden;
+            position: relative;
+        }
+
+        .product-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(transparent, var(--card-bg));
+            opacity: 0.8;
         }
 
         .product-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.15);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .product-info {
-            padding: 25px;
+            padding: 30px;
+            position: relative;
+            z-index: 2;
         }
 
+        .product-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-light);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .product-info p {
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(108, 99, 255, 0.3);
+        }
+
+        .product-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .product-features li {
+            color: var(--text-gray);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .product-features li:hover {
+            color: var(--primary-color);
+        }
+
+        .product-features li::before {
+            content: '▸';
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-right: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .product-features li:hover::before {
+            transform: translateX(5px);
+        }
+
+        /* Процес */
         .process-steps {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 50px;
+            gap: 30px;
         }
 
         .step {
+            flex: 1;
+            min-width: 250px;
             text-align: center;
-            padding: 30px 20px;
+            padding: 40px 30px;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(50px);
             background: var(--card-bg);
-            border-radius: 15px;
+            border-radius: 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0.05;
+            transition: left 0.4s ease;
+        }
+
+        .step:hover::before {
+            left: 0;
+        }
+
+        .step:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(108, 99, 255, 0.1);
+        }
+
+        .step-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 25px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            transition: all 0.4s ease;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .step:hover .step-icon {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 15px 40px rgba(108, 99, 255, 0.4);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .step h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .step p {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* Галерея */
+        .gallery {
+            background: var(--darker-bg);
+            position: relative;
+        }
+
+        .gallery::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--gradient);
+            opacity: 0.3;
         }
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
         }
 
         .gallery-item {
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transform: scale(0.8) rotate(-5deg);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            aspect-ratio: 4/3;
+        }
+
+        .gallery-item:nth-child(even) {
+            transform: scale(0.8) rotate(5deg);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) rotate(0deg);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(108, 99, 255, 0.3);
         }
 
         .gallery-item img {
             width: 100%;
-            height: 200px;
+            height: 100%;
             object-fit: cover;
+            transition: transform 0.6s ease;
         }
 
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 40px 25px 25px;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .gallery-overlay p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Відгуки */
         .testimonials-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
         }
 
         .testimonial-card {
             background: var(--card-bg);
-            padding: 30px;
-            border-radius: 15px;
+            padding: 40px;
+            border-radius: 25px;
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.6s ease;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .testimonial-card:nth-child(even) {
+            transform: translateX(100px);
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-size: 6rem;
+            color: var(--primary-color);
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            opacity: 0.2;
+            line-height: 1;
+        }
+
+        .testimonial-card:hover {
+            transform: translateX(0) translateY(-10px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(108, 99, 255, 0.1);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 25px;
+            color: var(--text-gray);
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .author-info h4 {
+            color: var(--text-light);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .author-info p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* CTA секція */
+        .cta-section {
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            color: var(--text-gray);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Футер */
+        footer {
+            background-color: var(--darker-bg);
+            padding: 80px 10% 30px;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--gradient);
+            opacity: 0.3;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: var(--text-light);
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        .footer-column p, .footer-column a {
+            color: var(--text-gray);
+            margin-bottom: 15px;
+            display: block;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .footer-column a::before {
+            content: '▸';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            color: var(--primary-color);
+        }
+
+        .footer-column a:hover {
+            color: var(--primary-color);
+            transform: translateX(10px);
+        }
+
+        .footer-column a:hover::before {
+            opacity: 1;
+            left: -15px;
         }
 
         .social-links {
             display: flex;
             gap: 15px;
+            margin-top: 20px;
         }
 
         .social-links a {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: var(--card-bg);
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links a:hover {
+            background: var(--gradient);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 30px rgba(108, 99, 255, 0.3);
+            border-color: transparent;
+        }
+
+        .copyright {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #777;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Адаптивність */
+        @media (max-width: 968px) {
+            .about-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.8rem;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+            }
+            
+            .cursor, .cursor-follower {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            section {
+                padding: 80px 5%;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Мобільне меню -->
-    <div class="nav-overlay" id="navOverlay"></div>
+    <!-- Кастомний курсор -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Анімований фон -->
+    <div class="animated-bg"></div>
+    <div class="floating-shapes" id="shapes"></div>
+
+    <!-- Прогрес бар -->
+    <div class="scroll-progress"></div>
+
+    <!-- Навігація -->
     <nav id="mainNav">
         <a href="#" class="logo">D<span class="logo-accent">B</span> Studio</a>
         <div class="nav-links">
@@ -537,183 +1088,406 @@
             <a href="#testimonials">Відгуки</a>
             <a href="#contact">Контакти</a>
         </div>
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
-            <i class="fas fa-bars"></i>
-        </button>
     </nav>
-
-    <div class="mobile-nav" id="mobileNav">
-        <div class="mobile-nav-links">
-            <a href="#about" onclick="closeMobileMenu()">Про нас</a>
-            <a href="#products" onclick="closeMobileMenu()">Продукція</a>
-            <a href="#process" onclick="closeMobileMenu()">Процес</a>
-            <a href="#gallery" onclick="closeMobileMenu()">Галерея</a>
-            <a href="#testimonials" onclick="closeMobileMenu()">Відгуки</a>
-            <a href="#contact" onclick="closeMobileMenu()">Контакти</a>
-        </div>
-    </div>
-
-    <!-- Прогрес бар -->
-    <div class="scroll-progress"></div>
-
-    <!-- Анімований фон -->
-    <div class="animated-bg"></div>
-    <div class="floating-shapes" id="shapes"></div>
 
     <!-- Герой -->
     <section class="hero">
-        <h1 id="heroTitle">Друкуючи музику</h1>
-        <p id="heroText">Перетворюємо цифрові ідеї на унікальні музичні аксесуари за допомогою 3D-друку.</p>
-        <div class="hero-buttons">
-            <a href="#products" class="cta-button">Дослідити колекцію</a>
-            <a href="#process" class="cta-button cta-secondary">Як це працює</a>
-        </div>
-        
-        <div class="stats" id="stats">
-            <div class="stat-item">
-                <span class="stat-number" data-target="500">0</span>
-                <div class="stat-label">Проектів</div>
+        <div class="hero-content">
+            <h1 id="heroTitle">Друкуючи музику</h1>
+            <p id="heroText">Перетворюємо цифрові ідеї на унікальні музичні аксесуари за допомогою 3D-друку. Персоналізовані, доступні та інноваційні рішення для музикантів.</p>
+            <div class="hero-buttons" id="heroButtons">
+                <a href="#products" class="cta-button">Дослідити колекцію</a>
+                <a href="#process" class="cta-button cta-secondary">Як це працює</a>
             </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="99">0</span>
-                <div class="stat-label">% Задоволених клієнтів</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="3">0</span>
-                <div class="stat-label">Роки досвіду</div>
+            
+            <!-- Статистика -->
+            <div class="stats" id="stats">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="500">0</span>
+                    <div class="stat-label">Успішних проектів</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="99">0</span>
+                    <div class="stat-label">% Задоволених клієнтів</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="3">0</span>
+                    <div class="stat-label">Роки досвіду</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="1000">0</span>
+                    <div class="stat-label">Виготовлених деталей</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Інші секції залишаються аналогічними, але з адаптивними класами -->
+    <!-- Про нас -->
     <section id="about" class="about">
         <h2 class="section-title">Наша філософія</h2>
         <div class="about-container">
             <div class="about-text">
-                <p>D B Studio — це незалежна майстерня, що поєднує інженерну точність з розумінням потреб сучасного музиканта.</p>
-                <a href="#contact" class="cta-button">Почати співпрацю</a>
+                <p>D B Studio — це незалежна майстерня, що поєднує інженерну точність з розумінням потреб сучасного музиканта. Ми віримо, що кожен виконавець заслуговує на інструменти, що відображають його унікальний стиль.</p>
+                <p>Наша місія — зробити музичний простір більш зручним, інноваційним та особистим, надаючи можливість буквально "друкувати" свої ідеї.</p>
+                <p>Більшість наших виробів виготовляється в обмежених серіях або за індивідуальними замовленнями, що робить кожен аксесуар частиною вашого стилю.</p>
+                <a href="#contact" class="cta-button" style="margin-top: 20px;">Почати співпрацю</a>
             </div>
             <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1552422535-458f81500f26?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="3D-принтер">
+                <img src="https://images.unsplash.com/photo-1552422535-458f81500f26?ixlib=rb-4.0.3&auto=format&fit=crop&w=2068&q=80" alt="3D-принтер друкує музичний аксесуар">
             </div>
         </div>
     </section>
 
+    <!-- Продукти -->
     <section id="products" class="products">
         <h2 class="section-title">Наша продукція</h2>
         <div class="product-grid">
             <div class="product-card">
                 <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1558089687-db6707d52b4c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Підставки для гітар">
+                    <img src="https://images.unsplash.com/photo-1558089687-db6707d52b4c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Підставки для гітар">
+                    <div class="product-badge">Хіт продаж</div>
                 </div>
                 <div class="product-info">
                     <h3>Підставки для гітар</h3>
-                    <p>Ергономічні та стабільні підставки для вашого інструменту.</p>
+                    <p>Ергономічні та стабільні підставки, що захищають ваш інструмент та доповнюють сценічний образ.</p>
+                    <ul class="product-features">
+                        <li>Індивідуальний дизайн</li>
+                        <li>Висока стабільність</li>
+                        <li>Антиковзне покриття</li>
+                        <li>Легкість та міцність</li>
+                    </ul>
                     <span class="product-price">від 450 грн</span>
-                    <a href="#contact" class="cta-button">Замовити</a>
+                    <a href="#contact" class="cta-button" style="width: 100%; text-align: center;">Замовити</a>
                 </div>
             </div>
-            <!-- Інші картки продуктів -->
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1571974096035-6d5bd8077f56?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Педальні платформи">
+                    <div class="product-badge">Новинка</div>
+                </div>
+                <div class="product-info">
+                    <h3>Педальборди</h3>
+                    <p>Індивідуально спроектовані платформи для організації ваших педалей ефектів. Міцні та легкі.</p>
+                    <ul class="product-features">
+                        <li>Модульна конструкція</li>
+                        <li>Кабель-менеджмент</li>
+                        <li>Посилена структура</li>
+                        <li>Інтеграція живлення</li>
+                    </ul>
+                    <span class="product-price">від 1200 грн</span>
+                    <a href="#contact" class="cta-button" style="width: 100%; text-align: center;">Замовити</a>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1598488034709-901528416aef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2066&q=80" alt="Експериментальні прототипи">
+                    <div class="product-badge">Ексклюзив</div>
+                </div>
+                <div class="product-info">
+                    <h3>Експериментальні прототипи</h3>
+                    <p>Унікальні деталі та аксесуари, що розширюють можливості класичних музичних інструментів.</p>
+                    <ul class="product-features">
+                        <li>Індивідуальний підхід</li>
+                        <li>Інноваційні матеріали</li>
+                        <li>Технічна підтримка</li>
+                        <li>Гарантія якості</li>
+                    </ul>
+                    <span class="product-price">індивідуально</span>
+                    <a href="#contact" class="cta-button" style="width: 100%; text-align: center;">Обговорити проект</a>
+                </div>
+            </div>
         </div>
     </section>
 
+    <!-- Процес -->
     <section id="process" class="process">
         <h2 class="section-title">Як ми працюємо</h2>
         <div class="process-steps">
             <div class="step">
                 <div class="step-icon">
                     <i class="fas fa-lightbulb"></i>
+                    <div class="step-number">1</div>
                 </div>
                 <h3>Консультація</h3>
-                <p>Обговорюємо вашу ідею та пропонуємо рішення.</p>
+                <p>Обговорюємо вашу ідею, аналізуємо потреби та пропонуємо оптимальні рішення для її реалізації.</p>
             </div>
-            <!-- Інші кроки -->
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-laptop-code"></i>
+                    <div class="step-number">2</div>
+                </div>
+                <h3>Дизайн</h3>
+                <p>Створюємо 3D-модель, враховуючи всі ваші побажання, функціональність та естетику.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-print"></i>
+                    <div class="step-number">3</div>
+                </div>
+                <h3>Друк</h3>
+                <p>Підбираємо оптимальний матеріал (PLA, PETG, ABS) та друкуємо ваш аксесуар з високою точністю.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-shipping-fast"></i>
+                    <div class="step-number">4</div>
+                </div>
+                <h3>Доставка</h3>
+                <p>Відправляємо готовий продукт по всій Україні. Гарантуємо безпечне пакування та швидку доставку.</p>
+            </div>
         </div>
     </section>
 
+    <!-- Галерея -->
+    <section id="gallery" class="gallery">
+        <h2 class="section-title">Наші роботи</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1525201548942-d8732f6617a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Гітарні аксесуари">
+                <div class="gallery-overlay">
+                    <h3>Гітарні підставки</h3>
+                    <p>Серія обмеженим тиражем</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1571974096035-6d5bd8077f56?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Педальборди">
+                <div class="gallery-overlay">
+                    <h3>Кастомні педальборди</h3>
+                    <p>Індивідуальні проекти</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1598488034709-901528416aef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2066&q=80" alt="Експериментальні деталі">
+                <div class="gallery-overlay">
+                    <h3>Експериментальні деталі</h3>
+                    <p>Інноваційні рішення</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Відгуки -->
+    <section id="testimonials" class="testimonials">
+        <h2 class="section-title">Відгуки клієнтів</h2>
+        <div class="testimonials-container">
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "Замовив підставку для гітари з логотипом моєї групи. Якість вражає! Все ідеально підігнано, матеріал міцний. Тепер це не просто аксесуар, а частина нашого іміджу. Рекомендую всім музикантам!"
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">АК</div>
+                    <div class="author-info">
+                        <h4>Андрій Коваль</h4>
+                        <p>Гітарист, група "Сонячний Вітер"</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    "Зробили кастомний педальборд для мого складного сетапу. Все продумано до дрібниць - проводка, кріплення, доступ до педалей. Працюю з ним вже рік - жодних нарікань! Професійний підхід та якість."
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">МЛ</div>
+                    <div class="author-info">
+                        <h4>Марія Лисенко</h4>
+                        <p>Сесійний музикант</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="contact" class="cta-section">
+        <h2 class="section-title">Готові створити щось унікальне?</h2>
+        <p id="ctaText">Зв'яжіться з нами для обговорення вашої ідеї, отримання консультації або перегляду повного каталогу продуктів. Давайте разом друкувати музику!</p>
+        <div class="hero-buttons">
+            <a href="mailto:info@dbstudio.com" class="cta-button">Написати нам</a>
+            <a href="tel:+380991234567" class="cta-button cta-secondary">Зателефонувати</a>
+        </div>
+    </section>
+
+    <!-- Футер -->
     <footer>
         <div class="footer-content">
             <div class="footer-column">
                 <h3>D B Studio</h3>
-                <p>Незалежна майстерня музичних аксесуарів.</p>
+                <p>Незалежна майстерня музичних аксесуарів, що поєднує технології 3D-друку з розумінням потреб музикантів.</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
                     <a href="#"><i class="fab fa-telegram"></i></a>
                 </div>
             </div>
-            <!-- Інші колонки футера -->
+            <div class="footer-column">
+                <h3>Продукція</h3>
+                <a href="#products">Гітарні підставки</a>
+                <a href="#products">Педальборди</a>
+                <a href="#products">Експериментальні деталі</a>
+                <a href="#products">Аксесуари для студії</a>
+                <a href="#products">Індивідуальні замовлення</a>
+            </div>
+            <div class="footer-column">
+                <h3>Контакти</h3>
+                <a href="mailto:info@dbstudio.com">info@dbstudio.com</a>
+                <a href="tel:+380991234567">+38 (099) 123-45-67</a>
+                <a href="tel:+380931234567">+38 (093) 123-45-67</a>
+                <p>м. Київ, вул. Музична 10</p>
+                <p>Пн-Пт: 10:00-19:00</p>
+                <p>Сб-Нд: за попереднім записом</p>
+            </div>
+            <div class="footer-column">
+                <h3>Інформація</h3>
+                <a href="#about">Про нас</a>
+                <a href="#process">Як ми працюємо</a>
+                <a href="#gallery">Галерея робіт</a>
+                <a href="#testimonials">Відгуки</a>
+                <a href="#">Доставка та оплата</a>
+                <a href="#">Гарантія</a>
+            </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2024 D B Studio. Усі права захищені.</p>
+            <p>&copy; 2024 D B Studio. Усі права захищені. Виготовлення музичних аксесуарів з 3D-друку.</p>
         </div>
     </footer>
 
     <script>
-        // Мобільне меню
-        function toggleMobileMenu() {
-            const mobileNav = document.getElementById('mobileNav');
-            const overlay = document.getElementById('navOverlay');
-            mobileNav.classList.toggle('active');
-            overlay.classList.toggle('active');
+        // Ініціалізація GSAP
+        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+        // Кастомний курсор
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            gsap.to(cursorFollower, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.1,
+                ease: "power2.out"
+            });
+        });
+
+        document.querySelectorAll('a, button, .cta-button').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                gsap.to(cursor, { scale: 1.5, duration: 0.2 });
+                gsap.to(cursorFollower, { scale: 2, duration: 0.2 });
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                gsap.to(cursor, { scale: 1, duration: 0.2 });
+                gsap.to(cursorFollower, { scale: 1, duration: 0.2 });
+            });
+        });
+
+        // Анімовані форми на фоні
+        function createShapes() {
+            const container = document.getElementById('shapes');
+            const shapes = [];
+            
+            for (let i = 0; i < 8; i++) {
+                const shape = document.createElement('div');
+                shape.className = 'shape';
+                const size = Math.random() * 300 + 100;
+                shape.style.width = size + 'px';
+                shape.style.height = size + 'px';
+                shape.style.left = Math.random() * 100 + '%';
+                shape.style.top = Math.random() * 100 + '%';
+                container.appendChild(shape);
+                shapes.push(shape);
+            }
+            
+            shapes.forEach((shape, i) => {
+                gsap.to(shape, {
+                    opacity: 0.3,
+                    x: 'random(-100, 100)',
+                    y: 'random(-100, 100)',
+                    rotation: 'random(-180, 180)',
+                    duration: 'random(10, 20)',
+                    repeat: -1,
+                    yoyo: true,
+                    delay: i * 2,
+                    ease: "sine.inOut"
+                });
+            });
         }
 
-        function closeMobileMenu() {
-            const mobileNav = document.getElementById('mobileNav');
-            const overlay = document.getElementById('navOverlay');
-            mobileNav.classList.remove('active');
-            overlay.classList.remove('active');
-        }
+        // Анімація навігації
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
 
-        document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
-        document.getElementById('navOverlay').addEventListener('click', closeMobileMenu);
+            // Прогрес бар
+            const winHeight = window.innerHeight;
+            const docHeight = document.documentElement.scrollHeight;
+            const scrollTop = window.pageYOffset;
+            const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
+            document.querySelector('.scroll-progress').style.width = scrollPercent + '%';
+        });
 
-        // Адаптивна анімація
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Відключаємо складні анімації на мобільних
-        const isMobile = window.innerWidth <= 768;
+        // Анімація героя
+        const heroTimeline = gsap.timeline();
         
-        if (!isMobile) {
-            // Складні анімації тільки для десктопу
-            gsap.utils.toArray('.section-title').forEach(title => {
-                gsap.to(title, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    scrollTrigger: {
-                        trigger: title,
-                        start: 'top 85%',
-                        toggleActions: 'play none none none'
-                    }
-                });
-            });
-        } else {
-            // Прості анімації для мобільних
-            gsap.utils.toArray('.section-title, .product-card, .step').forEach(el => {
-                gsap.to(el, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.6,
-                    scrollTrigger: {
-                        trigger: el,
-                        start: 'top 90%',
-                        toggleActions: 'play none none none'
-                    }
-                });
-            });
-        }
+        heroTimeline
+            .to('#heroTitle', {
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: 'power3.out'
+            })
+            .to('#heroText', {
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: 'power3.out'
+            }, '-=1')
+            .to('#heroButtons', {
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: 'power3.out'
+            }, '-=1')
+            .to('#heroTitle', {
+                textShadow: '0 0 30px rgba(108, 99, 255, 0.8)',
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: 'power2.inOut'
+            }, '-=0.5');
 
-        // Лічильники (працюють на всіх пристроях)
+        // Анімація статистики
+        gsap.to('#stats', {
+            opacity: 1,
+            duration: 1,
+            scrollTrigger: {
+                trigger: '#stats',
+                start: 'top 80%',
+                end: 'bottom 20%',
+                toggleActions: 'play none none none'
+            }
+        });
+
+        // Лічильники
         function animateCounters() {
             const counters = document.querySelectorAll('.stat-number');
             counters.forEach(counter => {
                 const target = +counter.getAttribute('data-target');
-                const duration = 2000;
+                const duration = 3000;
+                const step = target / (duration / 16);
                 let current = 0;
-                const increment = target / (duration / 16);
                 
                 const timer = setInterval(() => {
-                    current += increment;
+                    current += step;
                     if (current >= target) {
                         current = target;
                         clearInterval(timer);
@@ -723,17 +1497,148 @@
             });
         }
 
-        // Прогрес бар
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('mainNav');
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
+        // Складні анімації для всіх секцій
+        gsap.utils.toArray('.section-title').forEach(title => {
+            gsap.to(title, {
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                scrollTrigger: {
+                    trigger: title,
+                    start: 'top 85%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none none'
+                }
+            });
+        });
 
-            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-            document.querySelector('.scroll-progress').style.width = scrollPercent + '%';
+        // Анімація блоку "Про нас"
+        gsap.to('.about-container', {
+            opacity: 1,
+            y: 0,
+            duration: 1.5,
+            scrollTrigger: {
+                trigger: '.about-container',
+                start: 'top 80%',
+                end: 'bottom 20%',
+                toggleActions: 'play none none none'
+            }
+        });
+
+        gsap.to('.about-image', {
+            opacity: 1,
+            x: 0,
+            rotation: 0,
+            duration: 1.5,
+            delay: 0.5,
+            scrollTrigger: {
+                trigger: '.about-image',
+                start: 'top 80%',
+                end: 'bottom 20%',
+                toggleActions: 'play none none none'
+            }
+        });
+
+        // Секвенційна анімація карток продуктів
+        gsap.utils.toArray('.product-card').forEach((card, i) => {
+            gsap.to(card, {
+                opacity: 1,
+                y: 0,
+                rotationX: 0,
+                scale: 1,
+                duration: 1.2,
+                delay: i * 0.3,
+                ease: "back.out(1.7)",
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none none'
+                }
+            });
+        });
+
+        // Анімація кроків процесу
+        gsap.utils.toArray('.step').forEach((step, i) => {
+            gsap.to(step, {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                delay: i * 0.4,
+                scrollTrigger: {
+                    trigger: step,
+                    start: 'top 85%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none none'
+                }
+            });
+        });
+
+        // Анімація галереї
+        gsap.utils.toArray('.gallery-item').forEach((item, i) => {
+            gsap.to(item, {
+                opacity: 1,
+                scale: 1,
+                rotation: 0,
+                duration: 1,
+                delay: i * 0.2,
+                ease: "elastic.out(1, 0.5)",
+                scrollTrigger: {
+                    trigger: item,
+                    start: 'top 85%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none none'
+                }
+            });
+        });
+
+        // Анімація відгуків
+        gsap.utils.toArray('.testimonial-card').forEach((card, i) => {
+            gsap.to(card, {
+                opacity: 1,
+                x: 0,
+                duration: 1.2,
+                delay: i * 0.3,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none none'
+                }
+            });
+        });
+
+        // Анімація CTA
+        gsap.to('#ctaText', {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            scrollTrigger: {
+                trigger: '#ctaText',
+                start: 'top 85%',
+                end: 'bottom 20%',
+                toggleActions: 'play none none none'
+            }
+        });
+
+        // Паралакс ефект для фону
+        gsap.to('.animated-bg', {
+            yPercent: -20,
+            ease: "none",
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        // Запуск анімації лічильників
+        ScrollTrigger.create({
+            trigger: '#stats',
+            start: 'top 80%',
+            onEnter: animateCounters
         });
 
         // Плавна прокрутка
@@ -745,56 +1650,67 @@
                 
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
-                    closeMobileMenu(); // Закриваємо меню на мобільних
-                    
-                    if (isMobile) {
-                        // Проста прокрутка для мобільних
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                        // GSAP анімація для десктопу
-                        gsap.to(window, {
-                            duration: 1,
-                            scrollTo: { y: targetElement, offsetY: 80 },
-                            ease: "power2.inOut"
-                        });
-                    }
+                    gsap.to(window, {
+                        duration: 1.5,
+                        scrollTo: {
+                            y: targetElement,
+                            offsetY: 80
+                        },
+                        ease: "power2.inOut"
+                    });
                 }
             });
         });
 
-        // Оптимізація продуктивності
-        if (isMobile) {
-            // Відключаємо складні ефекти на мобільних
-            const heavyElements = document.querySelectorAll('.floating-shapes, .animated-bg');
-            heavyElements.forEach(el => el.style.display = 'none');
-        }
-
-        // Запуск анімації лічильників
-        ScrollTrigger.create({
-            trigger: '#stats',
-            start: 'top 80%',
-            onEnter: animateCounters
+        // 3D ефект для карток продуктів
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const angleY = (x - centerX) / 25;
+                const angleX = (centerY - y) / 25;
+                
+                gsap.to(card, {
+                    rotationY: angleY,
+                    rotationX: -angleX,
+                    transformPerspective: 1000,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {
+                    rotationY: 0,
+                    rotationX: 0,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            });
         });
 
         // Ініціалізація
         document.addEventListener('DOMContentLoaded', () => {
+            createShapes();
+            
             // Показати навігацію
             setTimeout(() => {
                 document.getElementById('mainNav').classList.add('scrolled');
-            }, 1000);
+            }, 1500);
 
-            // Оптимізація завантаження
-            const images = document.querySelectorAll('img');
-            images.forEach(img => {
-                img.loading = 'lazy';
+            // Додаткові ефекти при завантаженні
+            gsap.from('nav', {
+                y: -100,
+                opacity: 0,
+                duration: 1,
+                delay: 0.5
             });
         });
-
-        // Оптимізація для низькошвидкісних з'єднань
-        if (navigator.connection && navigator.connection.saveData) {
-            const animations = document.querySelectorAll('.floating-shapes, .animated-bg');
-            animations.forEach(anim => anim.style.display = 'none');
-        }
     </script>
 </body>
 </html>
